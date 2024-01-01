@@ -71,7 +71,7 @@ class IntroPage extends StatelessWidget {
               const SizedBox(height: 16), // Spacer
 
               //*admin button
-              GestureDetector(
+             GestureDetector(
                 onTap: () {
                   // Add the logic for handling admin button press
                   // For now, it just navigates to the RegisterForm
@@ -98,8 +98,8 @@ class IntroPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-              ),
+               ),
+             ),
             ],
           ),
         ),
