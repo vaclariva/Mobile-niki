@@ -2,46 +2,8 @@
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart';
 
-// Import file definisi kelas Foto dari model
-class Foto {
-  int id;
-  String judul;
-  int harga;
-  String deskripsi;
-  String ukuran;
-  String imagePath;
-
-  Foto({
-    required this.id,
-    required this.judul,
-    required this.harga,
-    required this.deskripsi,
-    required this.ukuran,
-    required this.imagePath,
-  });
-
-  // Factory constructor to create a Foto instance from a map
-  factory Foto.fromMap(Map<String, dynamic> map) {
-    return Foto(
-      id: map['id'],
-      judul: map['judul'],
-      harga: map['harga'],
-      deskripsi: map['deskripsi'],
-      ukuran: map['ukuran'],
-      imagePath: map['imagePath'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'judul': judul,
-      'harga': harga,
-      'deskripsi': deskripsi,
-      'ukuran': ukuran,
-      'imagePath': imagePath,
-    };
-  }
-}
+// Import file definisi kelas Shoe dari model
+import 'models/shoe.dart';
 
 class DatabaseHelper {
   static Future<sql.Database> db() async {
@@ -51,12 +13,11 @@ class DatabaseHelper {
         version: 1,
         onCreate: (database, version) async {
           await database.execute("""
-          CREATE TABLE foto(
+          CREATE TABLE shoes(
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            judul TEXT,
-            harga INTEGER,
-            deskripsi TEXT,
-            ukuran TEXT,
+            name TEXT,
+            price TEXT,
+            description TEXT,
             imagePath TEXT
           )
           """);
@@ -68,28 +29,14 @@ class DatabaseHelper {
     }
   }
 
-  static Future<int> tambahFoto(Foto foto) async {
+  static Future<int> addShoe(Shoe shoe) async {
     final db = await DatabaseHelper.db();
-    final data = foto.toMap();
-    return db.insert('foto', data);
+    final data = shoe.toMap();
+    return db.insert('shoes', data);
   }
 
-  static Future<List<Foto>> getFoto() async {
+  static Future<List<Map<String, dynamic>>> getShoes() async {
     final db = await DatabaseHelper.db();
-    final List<Map<String, dynamic>> maps = await db.query("foto");
-    return List.generate(maps.length, (i) {
-      return Foto.fromMap(maps[i]);
-    });
-  }
-
-  static Future<int> updateFoto(Foto foto) async {
-    final db = await DatabaseHelper.db();
-    final data = foto.toMap();
-    return db.update('foto', data, where: "id=?", whereArgs: [foto.id]);
-  }
-
-  static Future<int> deleteFoto(int id) async {
-    final db = await DatabaseHelper.db();
-    return db.delete("foto", where: 'id = ?', whereArgs: [id]);
+    return db.query("shoes");
   }
 }
