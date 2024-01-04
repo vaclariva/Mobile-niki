@@ -67,25 +67,25 @@ class Cart extends ChangeNotifier {
         price: "220",
         description:
             "You\'ve got the hops and the speed-lace up in shoes that enhance what you bring to the court",
-        imagePath: "assets/images/jordan.png"),
+        imagePath: "assets/images/jordan.png", title: null),
     Shoe(
         name: "KD Treys",
         price: "240",
         description:
             "A secure midfoot strap is suited for scoring binges and defensive stands, so that you can lock in and keep winning.",
-        imagePath: "assets/images/kdtrey.png"),
+        imagePath: "assets/images/kdtrey.png", title: null),
     Shoe(
         name: "Zoom FREAK",
         price: "236",
         description:
             "The forward-thinking design of his latest signature shoe.",
-        imagePath: "assets/images/zoomfreak.png"),
+        imagePath: "assets/images/zoomfreak.png", title: null),
     Shoe(
         name: "Zion 2",
         price: "120",
         description:
             "Channel new levels of speed and power in shoes designed for Zion and built for ballers at any level.",
-        imagePath: "assets/images/zion2.png"),
+        imagePath: "assets/images/zion2.png", title: null),
   ];
 
   //* list of items in user card

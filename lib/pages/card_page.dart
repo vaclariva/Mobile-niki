@@ -44,7 +44,7 @@ class _CardPageState extends State<CardPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BankTransferPaymentPage(),
+                              builder: (context) => PaymentPage(),
                             ),
                           );
                         },

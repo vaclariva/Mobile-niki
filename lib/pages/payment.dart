@@ -97,21 +97,21 @@
 
 import 'package:flutter/material.dart';
 
-class BankTransferPaymentPage extends StatefulWidget {
+class PaymentPage extends StatefulWidget {
+  const PaymentPage({Key? key}) : super(key: key);
+
   @override
-  _BankTransferPaymentPageState createState() =>
-      _BankTransferPaymentPageState();
+  _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _BankTransferPaymentPageState extends State<BankTransferPaymentPage> {
-  String selectedBank = '1'; // Tambahkan variabel untuk menyimpan bank yang dipilih
-  List<String> bankList = ['Bank A', 'Bank B', 'Bank C']; // Gantilah dengan list bank yang sesuai
+class _PaymentPageState extends State<PaymentPage> {
+  String selectedBank = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bank Transfer Payment'),
+        title: const Text('Payment'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -119,120 +119,235 @@ class _BankTransferPaymentPageState extends State<BankTransferPaymentPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Select Bank',
+              'Select Payment Method',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
             ),
             const SizedBox(height: 16),
-            DropdownButton<String>(
-              value: selectedBank,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedBank = newValue!;
-                });
+            PaymentMethodCard(
+              method: 'Credit Card',
+              icon: Icons.credit_card,
+              onTap: () {
+                _showPaymentAlert('Credit Card');
               },
-              items: bankList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Tambahkan logika untuk melanjutkan transaksi
-                if (selectedBank.isNotEmpty) {
-                  // Lakukan sesuatu setelah bank dipilih
-                  // Misalnya, tampilkan dialog untuk memasukkan nominal uang
-                  _showAmountDialog();
-                } else {
-                  // Tampilkan pesan kesalahan jika bank tidak dipilih
-                  _showErrorDialog();
-                }
+            PaymentMethodCard(
+              method: 'Bank Transfer',
+              icon: Icons.account_balance,
+              onTap: () {
+                _showBankOptions();
               },
-              child: const Text('Continue'),
             ),
+            // Add more payment methods as needed
           ],
         ),
       ),
     );
   }
 
-  // Metode untuk menampilkan dialog memasukkan nominal uang
-  void _showAmountDialog() {
+  void _showBankOptions() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Enter Amount'),
-          content: TextField(
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Amount'),
+          title: const Text('Select Bank'),
+          content: Column(
+            children: [
+              ListTile(
+                title: const Text('Mandiri'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showPaymentAmountDialog('Mandiri');
+                },
+              ),
+              ListTile(
+                title: const Text('BCA'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showPaymentAmountDialog('BCA');
+                },
+              ),
+              ListTile(
+                title: const Text('BRI'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showPaymentAmountDialog('BRI');
+                },
+              ),
+              ListTile(
+                title: const Text('BNI'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showPaymentAmountDialog('BNI');
+                },
+              ),
+              // Add more banks as needed
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Tutup dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Tambahkan logika untuk menangani jumlah yang dimasukkan
-                // Misalnya, lakukan pembayaran dan tampilkan konfirmasi
-                _showConfirmationDialog();
-              },
-              child: const Text('OK'),
-            ),
-          ],
         );
       },
     );
   }
 
-  // Metode untuk menampilkan dialog konfirmasi
-  void _showConfirmationDialog() {
+  void _showPaymentAmountDialog(String bank) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Transaction Completed'),
-          content: const Text('Thank you for your payment!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Tutup dialog konfirmasi
-                Navigator.pop(context); // Kembali ke halaman sebelumnya (My Card)
-              },
-              child: const Text('OK'),
-            ),
-          ],
+          title: const Text('Enter Payment Details'),
+          content: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  labelStyle: TextStyle(color: Colors.grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                ),
+                style: TextStyle(color: Colors.grey),
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Address',
+                  labelStyle: TextStyle(color: Colors.grey),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                ),
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _showOrderConfirmationAlert(bank);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey,
+                  onPrimary: Colors.white,
+                ),
+                child: const Text('Send', style: TextStyle(fontSize: 14)),
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  // Metode untuk menampilkan pesan kesalahan jika bank tidak dipilih
-  void _showErrorDialog() {
+  void _showOrderConfirmationAlert(String bank) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Error'),
-          content: const Text('Please select a bank.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Tutup dialog
-              },
-              child: const Text('OK'),
-            ),
-          ],
+          title: const Text('Order Placed'),
+          content: Column(
+            children: [
+              const Text('Your order has been placed successfully!'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey,
+                  onPrimary: Colors.white,
+                ),
+                child: const Text('OK', style: TextStyle(fontSize: 14)),
+              ),
+            ],
+          ),
         );
       },
     );
   }
+
+  void _showPaymentAlert(String method) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Payment Successful'),
+          content: Column(
+            children: [
+              const Text('Your payment was successful!'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey,
+                  onPrimary: Colors.white,
+                ),
+                child: const Text('OK', style: TextStyle(fontSize: 14)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class PaymentMethodCard extends StatelessWidget {
+  final String method;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const PaymentMethodCard({
+    required this.method,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: 40,
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    method,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+              const Icon(Icons.arrow_forward_ios),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(const MaterialApp(
+    home: PaymentPage(),
+  ));
 }

@@ -34,7 +34,7 @@ class Shoe {
     required this.price,
     required this.description,
     required this.imagePath,
-    this.quantity = 1,
+    this.quantity = 1, required title,
   });
 
     Map<String, dynamic> toMap() {

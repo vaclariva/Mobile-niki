@@ -4,6 +4,7 @@ import 'package:sneaker_shop_app/pages/shop_page.dart';
 import 'card_page.dart';
 import 'about_us_page.dart';
 import 'intro_page.dart';
+// import 'upload_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
